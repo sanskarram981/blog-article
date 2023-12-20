@@ -19,7 +19,7 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
     {
-        return new ResponseEntity<>(this.userService.createUser(userDto), HttpStatus.OK);
+        return new ResponseEntity<>(this.userService.createUser(userDto), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/{userId}")
