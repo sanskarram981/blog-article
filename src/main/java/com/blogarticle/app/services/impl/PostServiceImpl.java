@@ -5,15 +5,16 @@ import com.blogarticle.app.entities.Post;
 import com.blogarticle.app.entities.User;
 import com.blogarticle.app.exceptions.ResourceAlreadyFoundException;
 import com.blogarticle.app.exceptions.ResourceNotFoundException;
-import com.blogarticle.app.payloads.ApiResponse;
-import com.blogarticle.app.payloads.CategoryDto;
-import com.blogarticle.app.payloads.PostDto;
-import com.blogarticle.app.payloads.UserDto;
+import com.blogarticle.app.payloads.*;
 import com.blogarticle.app.repositories.CategoryRepository;
 import com.blogarticle.app.repositories.PostRepository;
 import com.blogarticle.app.repositories.UserRepository;
 import com.blogarticle.app.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,13 +34,13 @@ public class PostServiceImpl implements PostService {
     public PostDto createPost(PostDto postDto, Integer userId, Integer catId) {
         Optional<Post> postOptional = this.postRepo.findByTitle(postDto.getTitle());
         if(postOptional.isPresent())
-            throw new ResourceAlreadyFoundException("Post","title",postDto.getTitle());
+            throw new ResourceAlreadyFoundException("POST::","title",postDto.getTitle());
         Optional<User> userOptional = this.userRepo.findById(userId);
         if(!userOptional.isPresent())
-            throw new ResourceNotFoundException("User","id",Integer.toString(userId));
+            throw new ResourceNotFoundException("USER::","id",Integer.toString(userId));
         Optional<Category> catOptional = this.categoryRepo.findById(catId);
         if(!catOptional.isPresent())
-            throw new ResourceNotFoundException("Category","id",Integer.toString(catId));
+            throw new ResourceNotFoundException("CATEGORY::","id",Integer.toString(catId));
         Post post = conversion(postDto);
         User user = userOptional.get();
         Category category = catOptional.get();
@@ -50,23 +51,57 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto updatePost(PostDto postDto, Integer userId, Integer catId) {
-        return null;
+    public PostDto updatePost(PostDto postDto,Integer postId) {
+        Optional<Post> postOptional = this.postRepo.findById(postId);
+        if(!postOptional.isPresent())
+            throw new ResourceNotFoundException("CATEGORY::","id",Integer.toString(postId));
+        Post post = postOptional.get();
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        post.setImageUrl(postDto.getImageUrl());
+        post = this.postRepo.save(post);
+        return this.conversion(post);
     }
 
     @Override
     public ApiResponse deletePost(Integer postId) {
-        return null;
+        Optional<Post> postOptional = this.postRepo.findById(postId);
+        if(!postOptional.isPresent())
+            throw new ResourceNotFoundException("POST::","id",Integer.toString(postId));
+        Post post = postOptional.get();
+        this.postRepo.delete(post);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("Post deleted successfully..");
+        apiResponse.setSuccess(true);
+        apiResponse.setData(null);
+        return apiResponse;
     }
 
     @Override
     public PostDto getPost(Integer postId) {
-        return null;
+        Optional<Post> postOptional = this.postRepo.findById(postId);
+        if(!postOptional.isPresent())
+            throw new ResourceNotFoundException("POST","id",Integer.toString(postId));
+        Post post = postOptional.get();
+        return this.conversion(post);
     }
 
     @Override
-    public ApiResponse getAllPost() {
-        return null;
+    public PaginatedPostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy,Integer sortOrder) {
+        Sort sort = sortOrder == -1 ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
+        Page<Post> pagePost = this.postRepo.findAll(pageable);
+        List<Post> posts = pagePost.getContent();
+        List<PostDto> postDtos = posts.stream().map(this::conversion).collect(Collectors.toList());
+        PaginatedPostResponse paginatedPostResponse = new PaginatedPostResponse();
+        paginatedPostResponse.setPageNumber(pagePost.getNumber());
+        paginatedPostResponse.setPageSize(pagePost.getSize());
+        paginatedPostResponse.setTotalElements(pagePost.getTotalElements());
+        paginatedPostResponse.setTotalPages(pagePost.getTotalPages());
+        paginatedPostResponse.setLastPage(pagePost.isLast());
+        paginatedPostResponse.setData(postDtos);
+        paginatedPostResponse.setTotalElement(pagePost.getNumberOfElements());
+        return paginatedPostResponse;
     }
 
     @Override
@@ -100,8 +135,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ApiResponse searchPostByKeyword(String keyword) {
-        return null;
+    public ApiResponse searchPostByTitleOrContentContaining(String keyword) {
+        List<Post> posts = this.postRepo.findAllByTitleOrContentContaining("%"+keyword+"%");
+        List<PostDto> postDtos = posts.stream().map(this::conversion).collect(Collectors.toList());
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("success");
+        apiResponse.setSuccess(true);
+        apiResponse.setData(postDtos);
+        return apiResponse;
     }
 
     private UserDto conversion(User user)
