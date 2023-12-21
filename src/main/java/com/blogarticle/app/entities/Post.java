@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -28,4 +30,6 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "cid")
     private Category category;
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 }

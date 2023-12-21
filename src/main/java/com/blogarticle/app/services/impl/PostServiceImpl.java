@@ -1,6 +1,7 @@
 package com.blogarticle.app.services.impl;
 
 import com.blogarticle.app.entities.Category;
+import com.blogarticle.app.entities.Comment;
 import com.blogarticle.app.entities.Post;
 import com.blogarticle.app.entities.User;
 import com.blogarticle.app.exceptions.ResourceAlreadyFoundException;
@@ -173,6 +174,8 @@ public class PostServiceImpl implements PostService {
         postDto.setAddedOn(post.getAddedOn());
         postDto.setUser(conversion(post.getUser()));
         postDto.setCategory(conversion(post.getCategory()));
+        List<CommentDto> comments = post.getComments().stream().map(this::conversion).collect(Collectors.toList());
+        postDto.setComments(comments);
         return postDto;
     }
 
@@ -185,6 +188,16 @@ public class PostServiceImpl implements PostService {
         post.setImageUrl(postDto.getImageUrl());
         post.setAddedOn(new Date());
         return post;
+    }
+
+    private CommentDto conversion(Comment comment)
+    {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setId(comment.getId());
+        commentDto.setContent(comment.getContent());
+        commentDto.setAddedOn(comment.getAddedOn());
+        commentDto.setUser(conversion(comment.getUser()));
+        return commentDto;
     }
 
 }

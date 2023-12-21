@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -22,4 +24,5 @@ public class PostDto {
     private Date addedOn;
     private UserDto user;
     private CategoryDto category;
+    private List<CommentDto> comments = new ArrayList<>();
 }
