@@ -1,11 +1,11 @@
 package com.blogarticle.app.utils;
 
-import com.blogarticle.app.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,19 +17,19 @@ import java.util.Map;
 public class JwtUtils {
     public static final int JWT_TOKEN_VALIDITY = 60 * 60 * 1000;
     public static final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    public String generateToken(User user)
+    public String generateToken(UserDetails userDetails)
     {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims,user.getEmail());
+        return doGenerateToken(claims,userDetails.getUsername());
     }
     public String getUsernameFromToken(String token)
     {
          Claims claims = getAllClaimsFromToken(token);
          return claims.getSubject();
     }
-    public boolean validateToken(String token, User user) throws Exception {
+    public boolean validateToken(String token, UserDetails userDetails) throws Exception {
         String username = getUsernameFromToken(token);
-        return username.equals(user.getEmail()) && !isTokenExpired(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
     private boolean isTokenExpired(String token)
     {

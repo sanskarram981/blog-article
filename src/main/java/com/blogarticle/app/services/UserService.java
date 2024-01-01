@@ -7,7 +7,7 @@ import com.blogarticle.app.payloads.UserDto;
 import java.util.List;
 
 public interface UserService {
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(UserDto userDto,Integer rid);
     UserDto updateUser(UserDto userDto,Integer userId);
     ApiResponse deleteUser(Integer userId);
     UserDto getUser(Integer userId);

@@ -1,16 +1,21 @@
 package com.blogarticle.app.services.impl;
 
+import com.blogarticle.app.entities.Role;
 import com.blogarticle.app.entities.User;
 import com.blogarticle.app.exceptions.ResourceAlreadyFoundException;
 import com.blogarticle.app.exceptions.ResourceNotFoundException;
 import com.blogarticle.app.payloads.ApiResponse;
 import com.blogarticle.app.payloads.UserDto;
+import com.blogarticle.app.repositories.RoleRepository;
 import com.blogarticle.app.repositories.UserRepository;
 import com.blogarticle.app.services.UserService;
 import com.blogarticle.app.utils.ValidateRequestData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,13 +24,23 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private RoleRepository roleRepo;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDto createUser(UserDto userDto,Integer rid) {
         ValidateRequestData.validate(userDto);
         Optional<User> userOptional = this.userRepo.findByEmail(userDto.getEmail());
         if(userOptional.isPresent())
             throw new ResourceAlreadyFoundException("User","email",userDto.getEmail());
         User user = this.conversion(userDto);
+        Optional<Role> roleOptional = this.roleRepo.findById(rid);
+        if(!roleOptional.isPresent())
+            throw new ResourceNotFoundException("Role","id",Integer.toString(rid));
+        Role role = roleOptional.get();
+        user.setRoles(Collections.singletonList(role));
         user = this.userRepo.save(user);
         return this.conversion(user);
     }
@@ -38,7 +53,7 @@ public class UserServiceImpl implements UserService {
         User user = userOptional.get();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(this.bCryptPasswordEncoder.encode(userDto.getPassword()));
         user.setAbout(userDto.getAbout());
         user = this.userRepo.save(user);
         return this.conversion(user);
@@ -94,7 +109,7 @@ public class UserServiceImpl implements UserService {
         user.setId(userDto.getId());
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setPassword(this.bCryptPasswordEncoder.encode(userDto.getPassword()));
         user.setAbout(userDto.getAbout());
         return user;
     }

@@ -55,4 +55,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({InvalidCredentialsException.class})
+    public ResponseEntity<ApiResponse> handleInvalidCredentialsException(InvalidCredentialsException invalidCredentialsException)
+    {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage(invalidCredentialsException.getMessage());
+        apiResponse.setSuccess(false);
+        apiResponse.setData(null);
+
+        return new ResponseEntity<>(apiResponse,HttpStatus.BAD_REQUEST);
+    }
+
 }
