@@ -5,6 +5,7 @@ import com.blogarticle.app.payloads.LoginRequestDto;
 import com.blogarticle.app.payloads.LoginResponseDto;
 import com.blogarticle.app.payloads.UserDto;
 import com.blogarticle.app.utils.JwtUtils;
+import com.blogarticle.app.utils.ValidateRequestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequestDto)
     {
+        ValidateRequestData.validate(loginRequestDto);
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         try
         {

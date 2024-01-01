@@ -2,6 +2,7 @@ package com.blogarticle.app.utils;
 
 import com.blogarticle.app.exceptions.RequestDataValidationException;
 import com.blogarticle.app.payloads.CategoryDto;
+import com.blogarticle.app.payloads.LoginRequestDto;
 import com.blogarticle.app.payloads.UserDto;
 
 import java.util.regex.Matcher;
@@ -47,4 +48,13 @@ public class ValidateRequestData {
         else
             return str.isBlank();
     }
+
+    public static void validate(LoginRequestDto loginRequestDto)
+    {
+        if(loginRequestDto.getUsername() == null || isBlank(loginRequestDto.getUsername()))
+            throw new RequestDataValidationException("LOGIN","username is missing");
+        if(loginRequestDto.getPassword() == null || isBlank(loginRequestDto.getPassword()))
+            throw new RequestDataValidationException("LOGIN","password is missing");
+    }
+
 }
