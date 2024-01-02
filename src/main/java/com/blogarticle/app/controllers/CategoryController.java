@@ -1,9 +1,8 @@
 package com.blogarticle.app.controllers;
 
-import com.blogarticle.app.payloads.ApiResponse;
+import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.CategoryDto;
 import com.blogarticle.app.services.CategoryService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +28,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{catId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable("catId") Integer catId)
+    public ResponseEntity<ApiResponseDto> deleteCategory(@PathVariable("catId") Integer catId)
     {
         return new ResponseEntity<>(this.categoryService.deleteCategory(catId),HttpStatus.OK);
     }
@@ -41,7 +40,7 @@ public class CategoryController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse> getAllCategory()
+    public ResponseEntity<ApiResponseDto> getAllCategory()
     {
         return new ResponseEntity<>(this.categoryService.getAllCategory(),HttpStatus.OK);
     }

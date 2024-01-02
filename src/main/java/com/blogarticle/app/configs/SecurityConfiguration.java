@@ -28,6 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -35,9 +36,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@EnableWebMvc
 public class SecurityConfiguration{
 
-    private static final String[] AUTH_WHITELIST = {"/auth/**"};
+    private static final String[] AUTH_WHITELIST = {"/auth/**","v3/api-docs","/swagger-ui/index.html"};
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;

@@ -3,7 +3,7 @@ package com.blogarticle.app.services.impl;
 import com.blogarticle.app.entities.Comment;
 import com.blogarticle.app.entities.Post;
 import com.blogarticle.app.exceptions.ResourceNotFoundException;
-import com.blogarticle.app.payloads.ApiResponse;
+import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.CommentDto;
 import com.blogarticle.app.entities.User;
 import com.blogarticle.app.payloads.UserDto;
@@ -42,17 +42,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public ApiResponse deleteComment(Integer commentId) {
+    public ApiResponseDto deleteComment(Integer commentId) {
         Optional<Comment> commentOptional = this.commentRepo.findById(commentId);
         if(!commentOptional.isPresent())
             throw new ResourceNotFoundException("Comment","id",Integer.toString(commentId));
         Comment comment = commentOptional.get();
         this.commentRepo.delete(comment);
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("Comment delete successfully");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(null);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("Comment delete successfully");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(null);
+        return apiResponseDto;
     }
 
     @Override

@@ -1,9 +1,8 @@
 package com.blogarticle.app.controllers;
 
-import com.blogarticle.app.payloads.ApiResponse;
+import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.CommentDto;
 import com.blogarticle.app.services.CommentService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponse> deleteComment(@PathVariable("commentId") Integer commentId)
+    public ResponseEntity<ApiResponseDto> deleteComment(@PathVariable("commentId") Integer commentId)
     {
         return new ResponseEntity<>(this.commentService.deleteComment(commentId), HttpStatus.OK);
     }

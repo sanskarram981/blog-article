@@ -65,17 +65,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ApiResponse deletePost(Integer postId) {
+    public ApiResponseDto deletePost(Integer postId) {
         Optional<Post> postOptional = this.postRepo.findById(postId);
         if(!postOptional.isPresent())
             throw new ResourceNotFoundException("POST::","id",Integer.toString(postId));
         Post post = postOptional.get();
         this.postRepo.delete(post);
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("Post deleted successfully..");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(null);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("Post deleted successfully..");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(null);
+        return apiResponseDto;
     }
 
     @Override
@@ -106,44 +106,44 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public ApiResponse getAllPostByUser(Integer userId) {
+    public ApiResponseDto getAllPostByUser(Integer userId) {
         Optional<User> userOptional = this.userRepo.findById(userId);
         if(!userOptional.isPresent())
             throw new ResourceNotFoundException("User","id",Integer.toString(userId));
         User user = userOptional.get();
         List<Post> posts = this.postRepo.findAllByUser(user);
         List<PostDto> postDtos = posts.stream().map(this::conversion).collect(Collectors.toList());
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("success");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(postDtos);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("success");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(postDtos);
+        return apiResponseDto;
     }
 
     @Override
-    public ApiResponse getAllPostByCategory(Integer catId) {
+    public ApiResponseDto getAllPostByCategory(Integer catId) {
         Optional<Category> catOptional = this.categoryRepo.findById(catId);
         if(!catOptional.isPresent())
             throw new ResourceNotFoundException("Category","id",Integer.toString(catId));
         Category category = catOptional.get();
         List<Post> posts = this.postRepo.findAllByCategory(category);
         List<PostDto> postDtos = posts.stream().map(this::conversion).collect(Collectors.toList());
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("success");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(postDtos);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("success");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(postDtos);
+        return apiResponseDto;
     }
 
     @Override
-    public ApiResponse searchPostByTitleOrContentContaining(String keyword) {
+    public ApiResponseDto searchPostByTitleOrContentContaining(String keyword) {
         List<Post> posts = this.postRepo.findAllByTitleOrContentContaining("%"+keyword+"%");
         List<PostDto> postDtos = posts.stream().map(this::conversion).collect(Collectors.toList());
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("success");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(postDtos);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("success");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(postDtos);
+        return apiResponseDto;
     }
 
     private UserDto conversion(User user)

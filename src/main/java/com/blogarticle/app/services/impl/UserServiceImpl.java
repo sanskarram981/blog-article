@@ -4,7 +4,7 @@ import com.blogarticle.app.entities.Role;
 import com.blogarticle.app.entities.User;
 import com.blogarticle.app.exceptions.ResourceAlreadyFoundException;
 import com.blogarticle.app.exceptions.ResourceNotFoundException;
-import com.blogarticle.app.payloads.ApiResponse;
+import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.UserDto;
 import com.blogarticle.app.repositories.RoleRepository;
 import com.blogarticle.app.repositories.UserRepository;
@@ -12,7 +12,6 @@ import com.blogarticle.app.services.UserService;
 import com.blogarticle.app.utils.ValidateRequestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -60,16 +59,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse deleteUser(Integer userId) {
+    public ApiResponseDto deleteUser(Integer userId) {
         Optional<User> userOptional = this.userRepo.findById(userId);
         if(!userOptional.isPresent())
             throw new ResourceNotFoundException("User","id",Integer.toString(userId));
         this.userRepo.deleteById(userId);
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("User deleted successfully");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(null);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("User deleted successfully");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(null);
+        return apiResponseDto;
     }
 
     @Override
@@ -82,14 +81,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse getAllUser() {
+    public ApiResponseDto getAllUser() {
         List<User> users = this.userRepo.findAll();
         List<UserDto> userDtos = users.stream().map(this::conversion).collect(Collectors.toList());
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("success");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(userDtos);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("success");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(userDtos);
+        return apiResponseDto;
     }
 
     private UserDto conversion(User user)

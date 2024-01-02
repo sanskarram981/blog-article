@@ -1,7 +1,6 @@
 package com.blogarticle.app.controllers;
 
-import com.blogarticle.app.entities.Post;
-import com.blogarticle.app.payloads.ApiResponse;
+import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.PaginatedPostResponse;
 import com.blogarticle.app.payloads.PostDto;
 import com.blogarticle.app.services.PostService;
@@ -25,12 +24,12 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse> getAllPostByUser(@PathVariable("userId") Integer userId)
+    public ResponseEntity<ApiResponseDto> getAllPostByUser(@PathVariable("userId") Integer userId)
     {
         return new ResponseEntity<>(this.postService.getAllPostByUser(userId),HttpStatus.OK);
     }
     @GetMapping("/category/{catId}")
-    public ResponseEntity<ApiResponse> getAllPostByCategory(@PathVariable("catId") Integer catId)
+    public ResponseEntity<ApiResponseDto> getAllPostByCategory(@PathVariable("catId") Integer catId)
     {
         return new ResponseEntity<>(this.postService.getAllPostByCategory(catId),HttpStatus.OK);
     }
@@ -50,7 +49,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable("postId") Integer postId)
+    public ResponseEntity<ApiResponseDto> deletePost(@PathVariable("postId") Integer postId)
     {
         return new ResponseEntity<>(this.postService.deletePost(postId),HttpStatus.OK);
     }
@@ -62,7 +61,7 @@ public class PostController {
     }
 
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<ApiResponse> searchByKeyword(@PathVariable("keyword") String keyword)
+    public ResponseEntity<ApiResponseDto> searchByKeyword(@PathVariable("keyword") String keyword)
     {
         return  new ResponseEntity<>(this.postService.searchPostByTitleOrContentContaining(keyword),HttpStatus.OK);
     }

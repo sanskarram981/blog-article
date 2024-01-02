@@ -1,12 +1,10 @@
 package com.blogarticle.app.services.impl;
 
 import com.blogarticle.app.entities.Category;
-import com.blogarticle.app.entities.User;
 import com.blogarticle.app.exceptions.ResourceAlreadyFoundException;
 import com.blogarticle.app.exceptions.ResourceNotFoundException;
-import com.blogarticle.app.payloads.ApiResponse;
+import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.CategoryDto;
-import com.blogarticle.app.payloads.UserDto;
 import com.blogarticle.app.repositories.CategoryRepository;
 import com.blogarticle.app.services.CategoryService;
 import com.blogarticle.app.utils.ValidateRequestData;
@@ -47,16 +45,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ApiResponse deleteCategory(Integer catId) {
+    public ApiResponseDto deleteCategory(Integer catId) {
         Optional<Category> catOptional = this.categoryRepo.findById(catId);
         if(!catOptional.isPresent())
             throw new ResourceNotFoundException("Category","id",Integer.toString(catId));
         this.categoryRepo.deleteById(catId);
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("Category deleted successfully");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(null);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("Category deleted successfully");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(null);
+        return apiResponseDto;
     }
 
     @Override
@@ -69,14 +67,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ApiResponse getAllCategory() {
+    public ApiResponseDto getAllCategory() {
         List<Category> categories = this.categoryRepo.findAll();
         List<CategoryDto> catDtos = categories.stream().map(this::conversion).collect(Collectors.toList());
-        ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setMessage("success");
-        apiResponse.setSuccess(true);
-        apiResponse.setData(catDtos);
-        return apiResponse;
+        ApiResponseDto apiResponseDto = new ApiResponseDto();
+        apiResponseDto.setMessage("success");
+        apiResponseDto.setSuccess(true);
+        apiResponseDto.setData(catDtos);
+        return apiResponseDto;
     }
 
     private Category conversion(CategoryDto categoryDto)

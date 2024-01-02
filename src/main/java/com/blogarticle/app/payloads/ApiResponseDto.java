@@ -1,6 +1,5 @@
 package com.blogarticle.app.payloads;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ApiResponse
+public class ApiResponseDto
 {
     private String message;
     private boolean success;
