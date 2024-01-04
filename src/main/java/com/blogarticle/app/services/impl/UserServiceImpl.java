@@ -8,7 +8,6 @@ import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.UserDto;
 import com.blogarticle.app.repositories.RoleRepository;
 import com.blogarticle.app.repositories.UserRepository;
-import com.blogarticle.app.services.EmailService;
 import com.blogarticle.app.services.UserService;
 import com.blogarticle.app.utils.EmailUtils;
 import com.blogarticle.app.utils.ValidateRequestData;
