@@ -4,15 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service
 public class KafkaProducer {
 
     @Autowired
-    private KafkaTemplate<String,String> kafkaTemplate;
+    private KafkaTemplate<String,Object> kafkaTemplate;
 
-    public void sendMessage(String topic,String key,String value)
+    public void sendMessage(String topic, String key, HashMap<String,Object> logRequestDto)
     {
-        this.kafkaTemplate.send(topic,key,value);
+        try
+        {
+            this.kafkaTemplate.send(topic,key, logRequestDto);
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
     }
 
 }

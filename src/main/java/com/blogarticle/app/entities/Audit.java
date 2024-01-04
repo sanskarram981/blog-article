@@ -4,17 +4,20 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.*;
+
+import java.util.Date;
+
 @Entity
-@Table(name="roles")
+@Table(name = "audits")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Role {
+public class Audit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
-    List<User> users = new ArrayList<>();
+    private String resource;
+    private String method;
+    private String path;
+    private Date hitDate;
 }
