@@ -1,5 +1,6 @@
 package com.blogarticle.app.controllers;
 
+import com.blogarticle.app.kafka.KafkaProducer;
 import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.UserDto;
 import com.blogarticle.app.services.UserService;
@@ -14,11 +15,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private KafkaProducer kafkaProducer;
     @PostMapping("/")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
     {
@@ -50,6 +56,7 @@ public class UserController {
     @GetMapping("/")
     public ResponseEntity<ApiResponseDto> getAllUser()
     {
+        this.kafkaProducer.sendMessage("sihai","date",new Date().toString());
         return new ResponseEntity<>(this.userService.getAllUser(),HttpStatus.OK);
     }
 

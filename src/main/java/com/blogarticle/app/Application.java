@@ -17,7 +17,7 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		String attachPath = "F:\\com.blog-article\\src\\main\\resources\\static\\pdfs\\SUM_410825175038_260004922270_20240102.pdf";
-        this.emailService.sendMessageWithAttachment("sanskarram992@gmail.com","priyanka17462@gmail.com","this is testing springboot emailservice application","testing our developed springboot application mail service","sanskarram992@gmail.com",attachPath);
+//		String attachPath = "F:\\com.blog-article\\src\\main\\resources\\static\\pdfs\\SUM_410825175038_260004922270_20240102.pdf";
+//        this.emailService.sendMessageWithAttachment("sanskarram992@gmail.com","priyanka17462@gmail.com","this is testing springboot emailservice application","testing our developed springboot application mail service","sanskarram992@gmail.com",attachPath);
 	}
 }
