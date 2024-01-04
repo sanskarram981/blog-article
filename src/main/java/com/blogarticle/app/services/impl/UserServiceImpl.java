@@ -8,7 +8,9 @@ import com.blogarticle.app.payloads.ApiResponseDto;
 import com.blogarticle.app.payloads.UserDto;
 import com.blogarticle.app.repositories.RoleRepository;
 import com.blogarticle.app.repositories.UserRepository;
+import com.blogarticle.app.services.EmailService;
 import com.blogarticle.app.services.UserService;
+import com.blogarticle.app.utils.EmailUtils;
 import com.blogarticle.app.utils.ValidateRequestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +25,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepo;
-
+    @Autowired
+    private EmailUtils emailUtils;
     @Autowired
     private RoleRepository roleRepo;
     @Autowired
@@ -41,6 +44,8 @@ public class UserServiceImpl implements UserService {
         Role role = roleOptional.get();
         user.setRoles(Collections.singletonList(role));
         user = this.userRepo.save(user);
+        emailUtils.sendMessage(userDto.getEmail(),"You have been registered successfully",
+                "Thanks for registering.\n\nThanks & Regards,\nSihai");
         return this.conversion(user);
     }
 

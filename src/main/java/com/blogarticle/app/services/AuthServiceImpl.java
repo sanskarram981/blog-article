@@ -4,6 +4,7 @@ import com.blogarticle.app.exceptions.InvalidCredentialsException;
 import com.blogarticle.app.payloads.LoginRequestDto;
 import com.blogarticle.app.payloads.LoginResponseDto;
 import com.blogarticle.app.payloads.UserDto;
+import com.blogarticle.app.utils.EmailUtils;
 import com.blogarticle.app.utils.JwtUtils;
 import com.blogarticle.app.utils.ValidateRequestData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
-
+    @Autowired
+    private EmailUtils emailUtils;
     @Autowired
     private UserService userService;
-
     @Autowired
     private JwtUtils jwtUtils;
     @Override
@@ -42,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
             loginResponseDto.setToken(token);
             loginResponseDto.setMessage("login successfully");
             loginResponseDto.setSuccess(true);
+            emailUtils.sendMessage(username,"You have been login successfully", "Thanks for logging in.\n\nThanks & Regards,\nSihai");
         }
         catch(BadCredentialsException e)
         {
